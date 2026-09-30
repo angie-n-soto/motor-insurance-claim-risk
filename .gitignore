@@ -1,0 +1,18 @@
+# Environment
+.venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Data: too large for git, and the source is cited in the README instead
+data/raw/*
+data/processed/*
+!data/processed/.gitkeep
+
+# Backup dataset (Analytics Vidhya), not part of this project
+Motor Insurance Claims.xlsx
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
