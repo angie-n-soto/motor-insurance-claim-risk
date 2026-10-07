@@ -1,0 +1,46 @@
+{
+  "cv_train_2022_2023": {
+    "logistic": {
+      "pr_auc_mean": 0.2478,
+      "pr_auc_std": 0.0043
+    },
+    "xgboost": {
+      "pr_auc_mean": 0.253,
+      "pr_auc_std": 0.007
+    }
+  },
+  "test_2024": {
+    "logistic": {
+      "pr_auc": 0.269,
+      "roc_auc": 0.6789,
+      "top_decile_lift": 2.1557,
+      "top_vs_bottom_decile": 11.3582,
+      "brier": 0.1215,
+      "mean_predicted": 0.15,
+      "actual_rate": 0.1514
+    },
+    "xgboost": {
+      "pr_auc": 0.2814,
+      "roc_auc": 0.6861,
+      "top_decile_lift": 2.2363,
+      "top_vs_bottom_decile": 13.9144,
+      "brier": 0.1206,
+      "mean_predicted": 0.151,
+      "actual_rate": 0.1514
+    },
+    "baseline_base_rate": {
+      "pr_auc": 0.1514,
+      "roc_auc": 0.5,
+      "brier": 0.1287,
+      "mean_predicted": 0.1363,
+      "actual_rate": 0.1514
+    },
+    "baseline_insurer_premium": {
+      "pr_auc": 0.2635,
+      "roc_auc": 0.6776,
+      "top_decile_lift": 2.1148,
+      "top_vs_bottom_decile": 13.6947
+    }
+  },
+  "selected_model": "xgboost"
+}
