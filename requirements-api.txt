@@ -1,0 +1,12 @@
+# Only what the running API needs: no Jupyter, Excel, or parquet support.
+# A smaller image builds faster and has fewer things that can break.
+# Versions MUST match requirements.txt: a model pickled with one
+# scikit-learn/xgboost version may not load (or may behave differently) in another.
+pandas==3.0.6
+numpy==2.5.3
+scikit-learn==1.9.1
+xgboost==3.4.1
+shap==0.52.0
+matplotlib==3.11.2
+fastapi==0.138.1
+uvicorn==0.49.0

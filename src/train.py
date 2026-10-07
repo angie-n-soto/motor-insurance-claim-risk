@@ -222,6 +222,11 @@ def main() -> None:
             "model_name": best_name,
             "features": FEATURES,
             "train_claim_rate": float(y_train.mean()),
+            # The API always predicts a full year (exposure = 1.0), so its
+            # "compared with average" must use full-year policies only.
+            # The overall rate (13.6%) includes part-year policies and would
+            # make nearly every full-year prediction look above average.
+            "full_year_claim_rate": float(y_train[train["total_exposure"] == 1.0].mean()),
         },
         MODEL_PATH,
     )

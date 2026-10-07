@@ -16,3 +16,6 @@ Motor Insurance Claims.xlsx
 .DS_Store
 Thumbs.db
 .vscode/
+
+# Claude Code local preview config
+.claude/

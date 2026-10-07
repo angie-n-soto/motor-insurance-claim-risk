@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Motor Claim Risk</title>
+<style>
+  :root {
+    --bg: #f6f7f9; --card: #fff; --text: #1d2330; --muted: #5e6675; --border: #dde1e7;
+    --accent: #2f5d8a; --low: #2e7d4f; --avg: #9a6b00; --high: #b23b3b;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #14171c; --card: #1d2128; --text: #e6e9ee; --muted: #9aa3b2; --border: #333a45;
+      --accent: #6ea0d6; --low: #5cc28a; --avg: #e0b24a; --high: #ef7a7a;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, sans-serif; background: var(--bg); color: var(--text); line-height: 1.45; }
+  main { max-width: 960px; margin: 0 auto; padding: 24px 16px 48px; }
+  h1 { font-size: 1.6rem; margin: 0 0 4px; }
+  .sub { color: var(--muted); margin: 0 0 20px; }
+  .grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 20px; align-items: start; }
+  @media (max-width: 760px) { .grid { grid-template-columns: 1fr; } }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 18px; }
+  fieldset { border: 0; padding: 0; margin: 0 0 14px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+  legend { font-weight: 600; margin-bottom: 8px; color: var(--accent); }
+  label { display: flex; flex-direction: column; font-size: .85rem; color: var(--muted); gap: 3px; }
+  input, select { font: inherit; color: var(--text); background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 7px 8px; }
+  button { font: inherit; font-weight: 600; width: 100%; padding: 10px; border: 0; border-radius: 6px; background: var(--accent); color: #fff; cursor: pointer; }
+  button:disabled { opacity: .6; cursor: wait; }
+  .prob { font-size: 2.6rem; font-weight: 700; margin: 0; }
+  .level { display: inline-block; padding: 2px 10px; border-radius: 999px; font-weight: 600; font-size: .85rem; color: #fff; }
+  .low { background: var(--low); } .average { background: var(--avg); } .high { background: var(--high); }
+  ul { padding-left: 0; list-style: none; margin: 8px 0 0; }
+  li { padding: 8px 0; border-top: 1px solid var(--border); }
+  .up { color: var(--high); font-weight: 600; } .down { color: var(--low); font-weight: 600; }
+  .muted { color: var(--muted); font-size: .85rem; }
+  .err { color: var(--high); }
+  footer { margin-top: 24px; font-size: .85rem; color: var(--muted); }
+  a { color: var(--accent); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Motor insurance claim risk</h1>
+  <p class="sub">Probability that a policy has at least one claim over the next year, with the reasons behind the score.
+    XGBoost trained on 186k Spanish policy-years (2022–23), tested on 168k from 2024.</p>
+
+  <div class="grid">
+    <form id="f" class="card">
+      <fieldset>
+        <legend>Driver</legend>
+        <label>Driver age<input name="driver_age" type="number" min="18" max="90" value="40" required></label>
+        <label>Age when licensed<input name="licence_age" type="number" min="16" max="75" value="19" required></label>
+        <label>Claim last year
+          <select name="prev_year_claim">
+            <option value="no_history">No history (new customer)</option>
+            <option value="no">No</option>
+            <option value="yes">Yes</option>
+          </select></label>
+        <label>Bonus score
+          <select name="bonus_score"><option value="G">Good</option><option value="N">Neutral</option><option value="B">Bad</option></select></label>
+      </fieldset>
+      <fieldset>
+        <legend>Policy</legend>
+        <label>Coverage
+          <select name="policy_type">
+            <option value="TP">Third-party only</option>
+            <option value="TPG">Third-party + glass</option>
+            <option value="CC" selected>Third-party + extras</option>
+            <option value="COMP_E">Comprehensive with excess</option>
+            <option value="COMP_N">Comprehensive, no excess</option>
+          </select></label>
+        <label>Payment
+          <select name="payment_frequency"><option value="A">Annual</option><option value="S">Semiannual</option><option value="Q">Quarterly</option></select></label>
+        <label>Customer type
+          <select name="business_type"><option value="NB">New business</option><option value="P">Existing portfolio</option></select></label>
+      </fieldset>
+      <fieldset>
+        <legend>Vehicle &amp; area</legend>
+        <label>Brand
+          <select name="vehicle_brand">
+            <option>AUDI</option><option>BMW</option><option>CITROEN</option><option>FIAT</option><option>FORD</option>
+            <option>HYUNDAI</option><option>KIA</option><option>MERCEDES</option><option>NISSAN</option><option>OPEL</option>
+            <option>PEUGEOT</option><option>RENAULT</option><option>SEAT</option><option>TOYOTA</option>
+            <option selected>VOLKSWAGEN</option><option value="OTHER">Other</option>
+          </select></label>
+        <label>Fuel
+          <select name="fuel_type"><option value="D">Diesel</option><option value="G">Gasoline</option><option value="">Unknown</option></select></label>
+        <label>Vehicle value (€)<input name="vehicle_value" type="number" min="1" max="400000" step="any" value="25000"></label>
+        <label>Seats<input name="seats" type="number" min="2" max="9" value="5" required></label>
+        <label>Weight-to-power (kg/hp)<input name="power_to_weight_ratio" type="number" min="0" max="65" step="0.1" value="12" required></label>
+        <label>Area
+          <select name="municipality_type"><option value="I">Inland</option><option value="C">Coastal</option><option value="IS">Islands</option></select></label>
+        <label>Driving environment
+          <select name="circulation_area"><option value="U">Urban</option><option value="R">Rural</option></select></label>
+      </fieldset>
+      <button id="go" type="submit">Estimate risk</button>
+    </form>
+
+    <section class="card" id="out" aria-live="polite">
+      <p class="muted">Fill in the form and press <b>Estimate risk</b>.</p>
+    </section>
+  </div>
+
+  <footer>
+    <a href="/docs">API docs</a> ·
+    <a href="https://github.com/angie-n-soto/motor-insurance-claim-risk">Source &amp; methodology</a> ·
+    Data: Mendeley "Dataset of motor insurance portfolio". Portfolio project, not a pricing tool.
+  </footer>
+</main>
+
+<script>
+const NUMERIC = ["driver_age", "licence_age", "vehicle_value", "seats", "power_to_weight_ratio"];
+const pct = x => (x * 100).toFixed(1) + "%";
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+document.getElementById("f").addEventListener("submit", async e => {
+  e.preventDefault();
+  const out = document.getElementById("out"), btn = document.getElementById("go");
+  const body = {};
+  for (const [k, v] of new FormData(e.target)) {
+    body[k] = v === "" ? null : NUMERIC.includes(k) ? Number(v) : v;
+  }
+  btn.disabled = true;
+  try {
+    const res = await fetch("/predict", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(body)});
+    const data = await res.json();
+    if (!res.ok) {
+      const msg = Array.isArray(data.detail) ? data.detail.map(d => d.msg).join("; ") : data.detail;
+      out.innerHTML = `<p class="err">${esc(msg)}</p>`;
+      return;
+    }
+    const reasons = data.top_reasons.map(r =>
+      `<li><b>${esc(r.feature)}:</b> ${esc(r.value)} <span class="${r.effect === "raises risk" ? "up" : "down"}">${r.effect === "raises risk" ? "▲" : "▼"} ${esc(r.effect)}</span></li>`
+    ).join("");
+    out.innerHTML = `
+      <p class="muted">Probability of a claim in the next year</p>
+      <p class="prob">${pct(data.claim_probability)}</p>
+      <p><span class="level ${data.risk_level}">${data.risk_level} risk</span>
+         &nbsp;${data.relative_risk}× the average full-year policy (${pct(data.average_probability)})</p>
+      <p style="margin-bottom:0"><b>Top reasons</b></p>
+      <ul>${reasons}</ul>
+      <p class="muted">Reasons come from SHAP values: how much each input moved this score compared with an average policy.</p>`;
+  } catch (err) {
+    out.innerHTML = `<p class="err">Could not reach the model. Please try again.</p>`;
+  } finally {
+    btn.disabled = false;
+  }
+});
+</script>
+</body>
+</html>
