@@ -59,7 +59,7 @@ Roughly 1–2 weeks, working phase by phase. Durations are estimates.
 | 3. Modelling | ✅ done (Oct 7), untuned | Baselines: (a) base rate, (b) premium-only, (c) logistic regression. Then XGBoost + GroupKFold tuning. | Baseline-first; regularization; boosting vs bagging |
 | 4. Evaluation | ✅ done (Oct 7); threshold/error analysis cut | On 2024 data: PR-AUC, lift, calibration, threshold. Premium benchmark. Error analysis. | Why accuracy misleads; business framing of thresholds |
 | 5. Explainability | ✅ done (Oct 7); waterfalls cut | SHAP: global summary + 3 waterfall plots. Sanity-check against insurance intuition. Save model artifact. | Explainability; spotting a model that learned something wrong |
-| 6. Deployment | 1–2 days | FastAPI (`/predict`, `/health`, and a simple HTML form at `/`). Dockerfile. Deploy to Hugging Face Spaces. | API design, Pydantic validation, containers |
+| 6. Deployment | ✅ done (Oct 7) on Render free tier; HF Docker Spaces now need PRO | FastAPI (`/predict`, `/health`, and a simple HTML form at `/`). Dockerfile. Deploy to Hugging Face Spaces. | API design, Pydantic validation, containers |
 | 7. Documentation | 1 day | README, model card, limitations, screenshots | Communicating ML work |
 
 Results so far are logged in [reports/RESULTS.md](reports/RESULTS.md).
