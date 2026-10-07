@@ -1,0 +1,11 @@
+# Render Blueprint: Render reads this file to set up the service.
+# In the Render dashboard: New -> Blueprint -> pick this repo.
+services:
+  - type: web
+    name: motor-insurance-claim-risk
+    runtime: docker
+    plan: free
+    # Render won't route traffic to a new deploy until this returns 200,
+    # so a broken build never replaces a working one.
+    healthCheckPath: /health
+    autoDeploy: true  # redeploy on every push to main

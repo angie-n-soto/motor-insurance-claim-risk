@@ -1,5 +1,9 @@
 """Upload the app to a Hugging Face Space (Docker SDK).
 
+NOTE (Oct 2026): Docker Spaces now require a Hugging Face PRO subscription,
+so the live demo is hosted on Render instead (see render.yaml). This script
+is kept for anyone with PRO.
+
 One-time setup (in your own terminal, so the token never leaves your machine):
     pip install huggingface_hub
     hf auth login

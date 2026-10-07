@@ -19,6 +19,8 @@ RUN pip install --no-cache-dir --user -r requirements-api.txt
 COPY --chown=user src/ src/
 COPY --chown=user models/claim_model.joblib models/claim_model.joblib
 
-# 7860 is the port Hugging Face Spaces expects.
+# Hosts tell the app which port to listen on through $PORT (Render sets it);
+# fall back to 7860, the Hugging Face Spaces default. The shell form of CMD
+# is needed so ${PORT} gets expanded.
 EXPOSE 7860
-CMD ["uvicorn", "src.api:app", "--host", "0.0.0.0", "--port", "7860"]
+CMD uvicorn src.api:app --host 0.0.0.0 --port ${PORT:-7860}
