@@ -54,13 +54,15 @@ Roughly 1–2 weeks, working phase by phase. Durations are estimates.
 | Phase | Est. time | Work | Concepts |
 |-------|-----------|------|----------|
 | 0. Setup | ✅ done | Dataset chosen, repo + environment set up | Reproducible environments |
-| 1. EDA & cleaning | 1–2 days | EDA notebook: verify column meanings (incl. `vehicle_age`), leakage audit, exposure analysis, claim rate by feature. Write `src/clean.py`. | Verifying data dictionaries; leakage |
-| 2. Features & split | 1 day | `prev_year_claim`, brand grouping, confirmed renames. Out-of-time split. sklearn `ColumnTransformer` pipeline. | Why preprocessing lives *inside* a pipeline (prevents leakage and makes serving identical to training) |
-| 3. Modelling | 1–2 days | Baselines: (a) base rate, (b) premium-only, (c) logistic regression. Then XGBoost + GroupKFold tuning. | Baseline-first; regularization; boosting vs bagging |
-| 4. Evaluation | 1 day | On 2024 data: PR-AUC, lift, calibration, threshold. Premium benchmark. Error analysis. | Why accuracy misleads; business framing of thresholds |
-| 5. Explainability | 1 day | SHAP: global summary + 3 waterfall plots. Sanity-check against insurance intuition. Save model artifact. | Explainability; spotting a model that learned something wrong |
+| 1. EDA & cleaning | ✅ done (Oct 7) | EDA notebook: verify column meanings (incl. `vehicle_age`), leakage audit, exposure analysis, claim rate by feature. Write `src/clean.py`. | Verifying data dictionaries; leakage |
+| 2. Features & split | ✅ done (Oct 7) | `prev_year_claim`, brand grouping, confirmed renames. Out-of-time split. sklearn `ColumnTransformer` pipeline. | Why preprocessing lives *inside* a pipeline (prevents leakage and makes serving identical to training) |
+| 3. Modelling | ✅ done (Oct 7), untuned | Baselines: (a) base rate, (b) premium-only, (c) logistic regression. Then XGBoost + GroupKFold tuning. | Baseline-first; regularization; boosting vs bagging |
+| 4. Evaluation | ✅ done (Oct 7); threshold/error analysis cut | On 2024 data: PR-AUC, lift, calibration, threshold. Premium benchmark. Error analysis. | Why accuracy misleads; business framing of thresholds |
+| 5. Explainability | ✅ done (Oct 7); waterfalls cut | SHAP: global summary + 3 waterfall plots. Sanity-check against insurance intuition. Save model artifact. | Explainability; spotting a model that learned something wrong |
 | 6. Deployment | 1–2 days | FastAPI (`/predict`, `/health`, and a simple HTML form at `/`). Dockerfile. Deploy to Hugging Face Spaces. | API design, Pydantic validation, containers |
 | 7. Documentation | 1 day | README, model card, limitations, screenshots | Communicating ML work |
+
+Results so far are logged in [reports/RESULTS.md](reports/RESULTS.md).
 
 **If time runs short**, cut in this order: hyperparameter tuning (use defaults) → the premium benchmark → the HTML form (fall back to FastAPI's `/docs`). **Never cut:** the leakage audit, the out-of-time test, or deployment.
 
