@@ -1,5 +1,7 @@
 # Motor Insurance Claim Risk
 
+[![CI](https://github.com/angie-n-soto/motor-insurance-claim-risk/actions/workflows/ci.yml/badge.svg)](https://github.com/angie-n-soto/motor-insurance-claim-risk/actions/workflows/ci.yml)
+
 Predicts the probability that a motor insurance policy has at least one claim in a year, with per-prediction explanations (SHAP), served through a FastAPI app in Docker.
 
 **🔗 Live demo: https://motor-insurance-claim-risk.onrender.com** (API docs at [/docs](https://motor-insurance-claim-risk.onrender.com/docs)). Free hosting: the first load after 15 idle minutes takes about a minute to wake up.
@@ -18,3 +20,13 @@ python -m venv .venv
 .venv\Scripts\activate
 pip install -r requirements.txt
 ```
+
+## Tests
+```bash
+pip install -r requirements-dev.txt
+ruff check .
+pytest
+```
+The tests never touch the real data. They use a synthetic, fixed-seed file with the raw column layout
+([tests/fixtures/policies_sample.csv](tests/fixtures/policies_sample.csv), regenerate with
+`python tests/fixtures/make_fixture.py`) and the committed model. CI runs lint and tests on every push and pull request.
