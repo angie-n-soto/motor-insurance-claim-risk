@@ -1,0 +1,12 @@
+# Tool settings only. This repo is not an installable package; dependencies
+# live in requirements*.txt.
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# Lets tests import src.* and tests.fixtures.* from the repo root.
+pythonpath = ["."]
+addopts = "-q"
+
+[tool.ruff]
+target-version = "py312"
+extend-exclude = [".venv-dbt", "dbt/target", "dbt/dbt_packages"]
