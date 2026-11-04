@@ -1,0 +1,135 @@
+version: 2
+
+models:
+  - name: fct_policy_year
+    description: >
+      One row per insured per year with exposure > 0, the population the model is trained on.
+      Foreign keys to dim_driver, dim_policy, dim_vehicle and dim_year.
+    columns:
+      - name: policy_year_id
+        data_tests: [not_null, unique]
+      - name: driver_key
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_driver')
+                field: driver_key
+      - name: policy_key
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_policy')
+                field: policy_key
+      - name: vehicle_key
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_vehicle')
+                field: vehicle_key
+      - name: year
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_year')
+                field: year
+      - name: prev_year_claim
+        description: Did this insured claim in the immediately preceding year? Same rule as src/clean.py.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["yes", "no", "no_history"]
+      - name: driver_age_band
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["18-24", "25-34", "35-44", "45-54", "55-64", "65+", "unknown"]
+      - name: has_claim
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [0, 1]
+                quote: false
+      - name: total_exposure
+        data_tests: [not_null]
+      - name: premium_per_exposure
+        data_tests: [not_null]
+
+  - name: dim_driver
+    description: One row per insured.
+    columns:
+      - name: driver_key
+        data_tests: [not_null, unique]
+      - name: policy_years
+        data_tests: [not_null]
+
+  - name: dim_policy
+    description: Policy terms and rating territory (junk dimension).
+    columns:
+      - name: policy_key
+        data_tests: [not_null, unique]
+      - name: policy_type
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["TP", "TPG", "CC", "COMP_E", "COMP_N"]
+      - name: business_type
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["NB", "P"]
+      - name: payment_frequency
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["A", "S", "Q"]
+      - name: bonus_score
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["G", "N", "B"]
+      - name: municipality_type
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["I", "C", "IS"]
+      - name: circulation_area
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["U", "R"]
+
+  - name: dim_vehicle
+    description: One row per distinct vehicle profile (hash of brand, fuel, seats, value, power-to-weight).
+    columns:
+      - name: vehicle_key
+        data_tests: [not_null, unique]
+      - name: fuel_type
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["D", "G", "missing"]
+      - name: brand_group
+        data_tests: [not_null]
+      - name: value_band
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["<10k", "10-20k", "20-30k", "30-50k", "50k+", "unknown"]
+
+  - name: dim_year
+    columns:
+      - name: year
+        data_tests: [not_null, unique]
+      - name: model_split
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["train", "test"]

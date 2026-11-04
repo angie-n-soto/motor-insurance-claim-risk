@@ -1,0 +1,30 @@
+version: 2
+
+models:
+  - name: stg_policies
+    description: Raw policy-years, typed and renamed (vehicle_age -> years_licensed, age_driving_licence -> licence_age).
+    columns:
+      - name: policy_year_id
+        description: insured_id + '-' + year. The grain of the table.
+        data_tests: [not_null, unique]
+      - name: insured_id
+        data_tests: [not_null]
+      - name: year
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [2022, 2023, 2024]
+                quote: false
+      - name: total_exposure
+        data_tests: [not_null]
+      - name: total_claims
+        data_tests: [not_null]
+      - name: policy_status
+        description: Guessed values (Active / Cancelled), so a mismatch only warns.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["Active", "Cancelled"]
+              config:
+                severity: warn

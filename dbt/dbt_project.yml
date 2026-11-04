@@ -1,0 +1,24 @@
+name: motor_claims
+version: "1.0.0"
+config-version: 2
+profile: motor_claims
+
+model-paths: ["models"]
+test-paths: ["tests"]
+macro-paths: ["macros"]
+target-path: "target"
+clean-targets: ["target", "dbt_packages", "logs"]
+
+vars:
+  # Same out-of-time split as src/clean.py: train 2022-2023, test 2024.
+  test_year: 2024
+  # Same as src/clean.py: TOP_N_BRANDS and MIN_LICENCE_AGE.
+  top_n_brands: 15
+  min_licence_age: 16
+
+models:
+  motor_claims:
+    staging:
+      +materialized: view
+    marts:
+      +materialized: table

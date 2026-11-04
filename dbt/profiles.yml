@@ -1,0 +1,13 @@
+# Lives in the project folder, so `dbt build` run from dbt/ finds it.
+# No secrets: DuckDB is a local file.
+#
+#   DBT_DUCKDB_PATH  where the star schema is written (default dbt/target/motor_dbt.duckdb)
+#   MOTOR_CSV_PATH   which raw CSV to read (default: the SYNTHETIC fixture);
+#                    used in models/staging/sources.yml
+motor_claims:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: "{{ env_var('DBT_DUCKDB_PATH', 'target/motor_dbt.duckdb') }}"
+      threads: 4
