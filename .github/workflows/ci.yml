@@ -44,3 +44,7 @@ jobs:
         working-directory: dbt
         # MOTOR_CSV_PATH defaults to ../tests/fixtures/policies_sample.csv
         run: dbt build
+      - name: Power BI export (synthetic)
+        # Uses only duckdb, which requirements-dbt.txt already installs.
+        # No scores table in this job, so fct_scores.csv is skipped.
+        run: python dashboards/powerbi/export_for_powerbi.py --out "$RUNNER_TEMP/powerbi"
