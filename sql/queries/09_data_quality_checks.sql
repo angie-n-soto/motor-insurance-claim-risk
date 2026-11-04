@@ -2,7 +2,8 @@
 -- Technique: CASE WHEN counts in one pass, duplicate detection with a window
 -- count, then UNPIVOT into one row per check.
 -- On the real file the EDA found 49 zero-exposure rows (the only rows
--- src/clean.py drops), 57 licence ages under 16, and no duplicate (insured_id, year).
+-- src/clean.py drops) and 57 licence ages under 16. Duplicate (insured_id, year) rows are
+-- expected to be 0 (the EDA notebook checks it, but its output is not committed).
 WITH flagged AS (
     SELECT
         *,
