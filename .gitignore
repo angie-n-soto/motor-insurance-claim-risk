@@ -19,3 +19,19 @@ Thumbs.db
 
 # Claude Code local preview config
 .claude/
+
+# Second virtualenv for dbt (kept apart from the ML pins)
+.venv-dbt/
+
+# Tool caches
+.pytest_cache/
+.ruff_cache/
+
+# Local databases and generated outputs (may contain real data)
+*.duckdb
+*.duckdb.wal
+dbt/target/
+dbt/logs/
+dbt/dbt_packages/
+dbt/.user.yml
+dashboards/powerbi/data/
