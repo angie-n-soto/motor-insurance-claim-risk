@@ -1,0 +1,6 @@
+# dbt star schema (dbt/). Kept separate from requirements.txt: dbt-core pins
+# its own dependency ranges and doesn't need the ML stack.
+# Install in its own virtualenv:  python -m venv .venv-dbt
+dbt-core==1.12.6
+dbt-duckdb==1.11.1
+duckdb==1.5.6  # same version as requirements.txt, so both read the same .duckdb files

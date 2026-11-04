@@ -1,0 +1,14 @@
+version: 2
+
+sources:
+  - name: raw
+    description: >
+      The raw Mendeley motor portfolio, read straight from the semicolon-delimited CSV.
+      Path from the MOTOR_CSV_PATH environment variable, relative to dbt/. The default is
+      the SYNTHETIC test fixture; set MOTOR_CSV_PATH=../data/raw/motor_portfolio.csv for the real data.
+    tables:
+      - name: motor_portfolio
+        config:
+          external_location: >-
+            read_csv('{{ env_var('MOTOR_CSV_PATH', '../tests/fixtures/policies_sample.csv') }}',
+            delim = ';', header = true)
