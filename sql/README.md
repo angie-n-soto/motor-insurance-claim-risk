@@ -58,7 +58,8 @@ After `run_all.py` on the real file, check:
 - **Q5:** train yes 24.5% / no 17.4% / no_history 11.2%; test yes 25.5% / no 17.3% / no_history 9.5%.
 - **Q7:** decile 10 ≈ 33.9% and decile 1 ≈ 2.4% (small differences are possible: `NTILE` breaks
   ties by id, `pandas.qcut` by row order).
-- **Q9:** 49 zero-exposure rows, 57 licence ages under 16, 0 duplicate (insured_id, year) rows;
+- **Q9:** 49 zero-exposure rows, 57 licence ages under 16, and (expected) 0 duplicate (insured_id, year) rows: the EDA notebook
+  checks this, but its output isn't committed, so treat this one as unconfirmed until you run it;
   missing `fuel_type` 1,287 and `vehicle_value` 513.
 
 If a number doesn't match, that's a bug in the SQL (or in the earlier Python): worth finding before

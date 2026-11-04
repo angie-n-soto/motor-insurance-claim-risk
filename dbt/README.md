@@ -69,7 +69,7 @@ erDiagram
 
 | Model | Grain | Notes |
 |---|---|---|
-| `stg_policies` (view) | insured × year | Typed and renamed (`vehicle_age` → `years_licensed`, `age_driving_licence` → `licence_age`); licence age < 16 → null; missing fuel type → `missing`; exact duplicate (insured, year) rows removed (none in the real file). |
+| `stg_policies` (view) | insured × year | Typed and renamed (`vehicle_age` → `years_licensed`, `age_driving_licence` → `licence_age`); licence age < 16 → null; missing fuel type → `missing`; exact duplicate (insured, year) rows removed (none expected in the real file; sql query 09 counts them). |
 | `fct_policy_year` | insured × year, exposure > 0 | Same population as `src/clean.py`. `prev_year_claim` uses only the immediately preceding year, like the model feature. |
 | `dim_driver` | insured | Stable attributes; age and years licensed change yearly, so they stay on the fact. |
 | `dim_policy` | policy-terms combination | Small "junk" dimension of policy codes and rating territory, with readable labels. |
