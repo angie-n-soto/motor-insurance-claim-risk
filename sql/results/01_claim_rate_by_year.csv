@@ -1,0 +1,4 @@
+year,policies,insureds,exposure_years,policies_with_claim,claim_rate,claims_per_exposure_year
+2022,67171,67171,41912.5,8723,0.1299,0.3022
+2023,118835,118835,82399.0,16635,0.14,0.3053
+2024,168085,168085,126014.4,25448,0.1514,0.3117

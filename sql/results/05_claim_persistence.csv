@@ -1,0 +1,7 @@
+split,prev_year_claim,policies,claim_rate
+train,no,55223,0.1743
+train,no_history,122899,0.1123
+train,yes,7884,0.2454
+test,no,90708,0.1735
+test,no_history,62778,0.0953
+test,yes,14599,0.2554
