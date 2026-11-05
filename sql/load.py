@@ -45,7 +45,7 @@ def load(csv_path: Path = DEFAULT_CSV, db_path: Path = DEFAULT_DB) -> duckdb.Duc
     con = duckdb.connect(str(db_path))
     con.execute(
         "CREATE OR REPLACE TABLE policies AS "
-        "SELECT * FROM read_csv(?, delim = ';', header = true)",
+        "SELECT * FROM read_csv(?, delim = ';', header = true, nullstr = ['', 'NA'])",
         [str(csv_path)],
     )
     columns = [row[0] for row in con.execute("DESCRIBE policies").fetchall()]

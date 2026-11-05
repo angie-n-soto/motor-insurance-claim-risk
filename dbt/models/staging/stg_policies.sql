@@ -54,8 +54,7 @@ renamed as (
 
 deduplicated as (
 
-    -- The real file is expected to have no duplicate (insured_id, year) pairs
-    -- (unconfirmed: the EDA notebook's output isn't committed; check sql query 09),
+    -- The real file has no duplicate (insured_id, year) pairs (sql query 09 confirmed 0),
     -- so this should be a no-op there. It keeps policy_year_id unique if a duplicate ever appears
     -- (the synthetic fixture plants one on purpose).
     select *

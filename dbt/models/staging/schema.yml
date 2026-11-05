@@ -21,10 +21,10 @@ models:
       - name: total_claims
         data_tests: [not_null]
       - name: policy_status
-        description: Guessed values (Active / Cancelled), so a mismatch only warns.
+        description: A = active, C = cancelled (confirmed on the real file).
         data_tests:
           - accepted_values:
               arguments:
-                values: ["Active", "Cancelled"]
+                values: ["A", "C"]
               config:
                 severity: warn

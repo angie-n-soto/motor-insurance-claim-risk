@@ -177,7 +177,7 @@ def _policy_years(insureds: pd.DataFrame, rng: np.random.Generator) -> pd.DataFr
     ).round(2)
 
     cancelled = (df["total_exposure"] < 1.0) & (rng.random(n) < 0.5)
-    df["policy_status"] = np.where(cancelled, "Cancelled", "Active")
+    df["policy_status"] = np.where(cancelled, "C", "A")
     return df
 
 
@@ -226,7 +226,7 @@ def make_fixture(seed: int = SEED) -> pd.DataFrame:
 
 def main() -> None:
     df = make_fixture()
-    df.to_csv(OUT_PATH, sep=";", index=False)
+    df.to_csv(OUT_PATH, sep=";", index=False, na_rep="NA")  # the real file writes missing values as NA
     print(f"wrote {OUT_PATH.name}: {len(df)} rows x {df.shape[1]} columns (SYNTHETIC)")
     print(df["year"].value_counts().sort_index().to_string())
 
