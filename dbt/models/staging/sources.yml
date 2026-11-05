@@ -11,4 +11,4 @@ sources:
         config:
           external_location: >-
             read_csv('{{ env_var('MOTOR_CSV_PATH', '../tests/fixtures/policies_sample.csv') }}',
-            delim = ';', header = true)
+            delim = ';', header = true, nullstr = ['', 'NA'])

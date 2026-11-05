@@ -19,7 +19,7 @@ def _row(insured_id, year, total_claims=0, **overrides):
     row = {
         "insured_id": insured_id,
         "year": year,
-        "policy_status": "Active",
+        "policy_status": "A",
         "policy_type": "CC",
         "business_type": "P",
         "payment_frequency": "A",
