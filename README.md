@@ -10,6 +10,8 @@ Full results: [reports/RESULTS.md](reports/RESULTS.md) · Plan and decisions: [P
 
 **Headline (test year 2024, unseen):** the riskiest 10% of policies claimed 33.9% of the time vs 2.4% for the safest 10%. PR-AUC 0.281 vs 0.264 for ranking by the insurer's own premium; well calibrated (15.1% predicted vs 15.1% actual).
 
+**SQL findings ([sql/README.md](sql/README.md)):** quarterly payers leave at 3× the rate of annual payers (25.1% vs 7.8%); customers with two claim years in a row claim again 2.1× as often (33.6% vs 16.2%); comprehensive no-excess cover pays out 95% of its premium in claims vs 70% for the portfolio.
+
 ## Data
 Mendeley Data: *Dataset of motor insurance portfolio*, https://data.mendeley.com/datasets/sw4jmdb2sm/1 (license: TBD, check the dataset page).
 Not committed to the repo. Download it and save it as `data/raw/motor_portfolio.csv`.

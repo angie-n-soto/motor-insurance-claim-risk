@@ -35,14 +35,17 @@ def _rate_columns(df: pd.DataFrame) -> list[str]:
     return [c for c in df.columns if any(k in c for k in keys) and not c.startswith("prev_")]
 
 
-def test_there_are_ten_queries():
+N_QUERIES = 13
+
+
+def test_query_files_are_numbered_in_order():
     names = [p.stem for p in query_files()]
-    assert len(names) == 10
-    assert [n[:2] for n in names] == [f"{i:02d}" for i in range(1, 11)]
+    assert len(names) == N_QUERIES
+    assert [n[:2] for n in names] == [f"{i:02d}" for i in range(1, N_QUERIES + 1)]
 
 
 def test_every_query_returns_rows(results):
-    assert len(results) == 10
+    assert len(results) == N_QUERIES
     for name, df in results.items():
         assert not df.empty, name
 
@@ -150,5 +153,34 @@ def test_synthetic_results_never_go_to_sql_results(db_path, monkeypatch, tmp_pat
     monkeypatch.setattr(run_all_module, "SYNTHETIC_RESULTS_DIR", tmp_path / "synthetic")
     monkeypatch.setattr(run_all_module, "RESULTS_DIR", tmp_path / "real")
     run_all_module.run_all(db_path)  # no out_dir: the default is chosen from load_info
-    assert len(list((tmp_path / "synthetic").glob("*.csv"))) == 10
+    assert len(list((tmp_path / "synthetic").glob("*.csv"))) == N_QUERIES
     assert not (tmp_path / "real").exists()
+
+
+def test_who_renews_matches_pandas(results):
+    df = results["11_who_renews"]
+    overall = df[df["segment_type"] == "all"].iloc[0]
+    raw = clean.load_raw(FIXTURE_CSV)
+    ids = {y: set(raw.loc[raw["year"] == y, "insured_id"]) for y in (2022, 2023, 2024)}
+    rows = raw[raw["year"] < 2024]
+    renewed = [i in ids[y + 1] for i, y in zip(rows["insured_id"], rows["year"])]
+    assert overall["customers"] == len(rows)
+    # the planted duplicate (insured_id, year) row counts as "not renewed" once in SQL
+    assert abs(overall["renewal_rate"] - sum(renewed) / len(rows)) < 0.01
+    assert ((df["renewal_rate"] + df["leave_rate"]) - 1).abs().max() <= 0.0002
+    assert overall["leave_index"] == 1.0
+
+
+def test_repeat_claims_groups(results):
+    df = results["12_repeat_claims"]
+    assert set(df["prior_claim_years"]) <= {0, 1, 2}
+    assert 0 in set(df["prior_claim_years"])
+    assert df.loc[df["prior_claim_years"] == 0, "relative_risk"].iloc[0] == 1.0
+
+
+def test_pricing_vs_loss_ratios(results):
+    df = results["13_pricing_vs_loss"]
+    assert (df["loss_ratio"] >= 0).all()
+    assert (df["price_index"] > 0).all()
+    assert df["loss_ratio"].is_monotonic_decreasing
+    assert df["loss_ratio_rank"].min() == 1
